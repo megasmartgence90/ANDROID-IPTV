@@ -1,3 +1,4 @@
+import os
 import requests
 import re
 
@@ -30,7 +31,7 @@ if not b:
     raise SystemExit("Base URL bulunamadı.")
 base_url = b.group(1)
 
-# Kanal listesi
+# Kanal listesi (tam siyahın dəyişmədən qaldı)
 channels = [
     ("beIN Sport 1 HD","androstreamlivebs1","https://i.hizliresim.com/8xzjgqv.jpg"),
     ("beIN Sport 2 HD","androstreamlivebs2","https://i.hizliresim.com/8xzjgqv.jpg"),
@@ -70,7 +71,7 @@ channels = [
     ("Exxen 8 HD","androstreamliveexn8","https://i.hizliresim.com/8xzjgqv.jpg"),
 ]
 
-# M3U dosyası oluştur
+# Toplu M3U dosyası
 lines = ["#EXTM3U"]
 for name, cid, logo in channels:
     lines.append(f'#EXTINF:-1 tvg-id="sport.tr" tvg-name="TR:{name}" tvg-logo="{logo}" group-title="DeaTHLesS",TR:{name}')
@@ -81,3 +82,23 @@ with open("androiptv.m3u", "w", encoding="utf-8") as f:
     f.write("\n".join(lines))
 
 print("✅ androiptv.m3u oluşturuldu.")
+
+# Ayrı-ayrı kanal M3U faylları
+out_dir = "channels"
+os.makedirs(out_dir, exist_ok=True)
+
+for name, cid, logo in channels:
+    file_name = name.replace(" ", "_").replace("/", "_") + ".m3u"
+    full_url = f"{base_url}{cid}.m3u8"
+
+    content = [
+        "#EXTM3U",
+        "#EXT-X-VERSION:3",
+        '#EXT-X-STREAM-INF:BANDWIDTH=5500000,AVERAGE-BANDWIDTH=8976000,RESOLUTION=1920x1080,CODECS="avc1.640028,mp4a.40.2",FRAME-RATE=25',
+        full_url
+    ]
+
+    with open(os.path.join(out_dir, file_name), "w", encoding="utf-8") as f:
+        f.write("\n".join(content))
+
+print(f"✅ {len(channels)} kanal ayrıca '{out_dir}' qovluğuna yazıldı.")
