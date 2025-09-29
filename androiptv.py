@@ -31,7 +31,7 @@ if not b:
     raise SystemExit("Base URL bulunamadı.")
 base_url = b.group(1)
 
-# Kanal listesi (tam siyahın dəyişmədən qaldı)
+# Kanal listesi (tam siyahın saxlanıldı)
 channels = [
     ("beIN Sport 1 HD","androstreamlivebs1","https://i.hizliresim.com/8xzjgqv.jpg"),
     ("beIN Sport 2 HD","androstreamlivebs2","https://i.hizliresim.com/8xzjgqv.jpg"),
@@ -71,24 +71,24 @@ channels = [
     ("Exxen 8 HD","androstreamliveexn8","https://i.hizliresim.com/8xzjgqv.jpg"),
 ]
 
-# Toplu M3U dosyası
+# ✅ Toplu M3U faylı (androiptv.m3u8)
 lines = ["#EXTM3U"]
 for name, cid, logo in channels:
     lines.append(f'#EXTINF:-1 tvg-id="sport.tr" tvg-name="TR:{name}" tvg-logo="{logo}" group-title="DeaTHLesS",TR:{name}')
     full_url = f"{base_url}{cid}.m3u8"
     lines.append(full_url)
 
-with open("androiptv.m3u", "w", encoding="utf-8") as f:
+with open("androiptv.m3u8", "w", encoding="utf-8") as f:
     f.write("\n".join(lines))
 
-print("✅ androiptv.m3u oluşturuldu.")
+print("✅ androiptv.m3u8 faylı yaradıldı.")
 
-# Ayrı-ayrı kanal M3U faylları
+# ✅ Ayrı-ayrı .m3u8 faylları
 out_dir = "channels"
 os.makedirs(out_dir, exist_ok=True)
 
 for name, cid, logo in channels:
-    file_name = name.replace(" ", "_").replace("/", "_") + ".m3u"
+    file_name = name.replace(" ", "_").replace("/", "_") + ".m3u8"
     full_url = f"{base_url}{cid}.m3u8"
 
     content = [
@@ -101,4 +101,4 @@ for name, cid, logo in channels:
     with open(os.path.join(out_dir, file_name), "w", encoding="utf-8") as f:
         f.write("\n".join(content))
 
-print(f"✅ {len(channels)} kanal ayrıca '{out_dir}' qovluğuna yazıldı.")
+print(f"✅ {len(channels)} kanal ayrıca '{out_dir}' qovluğuna .m3u8 faylı olaraq yazıldı.")
